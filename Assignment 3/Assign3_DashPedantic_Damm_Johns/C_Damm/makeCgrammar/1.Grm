@@ -1,0 +1,94 @@
+%
+% C Tutorials 1 grammar
+%
+include "C.keys"
+include "C.compounds"
+
+% Adds #include to [id] non terminal via regex expression
+tokens
+	id	|	"\#\i+"
+	stringlit	|	"[0-9]+"
+	stringlit	|	"[a-zA-Z]+"
+end tokens
+
+define preprocessor
+	'#include<[stringlit]> [NL] |
+	'#include < [SPOFF] [filepath] > [SPON] [NL]
+end define
+
+define filepath
+	[fileID] [repeat slash_fileID]
+end define
+
+define fileID
+	[id] |
+	[key]
+end define
+
+define slash_fileID
+	[slash] [fileID]
+end define
+
+define slash
+	'/ | '\ | '. | ':
+end define
+
+
+define functionHeader
+	[primitives] [id][SPOFF]'([list params]')[SPON] [NL] |
+	[primitives] [id]'(') [NL]
+end define
+
+define functionBody
+	'{ [NL] [repeat LOC] '}
+end define
+
+define LOC
+	[repeat comment_c] |
+	[IN] [functionCalls]'; [repeat comment_c] [NL] |
+	return [id]'; [NL] |
+	return [stringlit]'; [NL] [EX]
+end define
+
+define functionFull
+	[functionHeader] [functionBody]
+end define
+
+define params
+	[primitives] [id]
+end define
+
+define primitives
+	int |
+	float |
+	char |
+	double |
+	short |
+	long |
+	void
+end define
+
+define functionCalls
+	printf[SPOFF]([stringlit])[SPON]
+end define
+
+
+%
+% Comments
+%
+define comment_c
+	'/* [repeat comment_string] '*/ [NL] |
+	'// [repeat comment_string] [NL]
+end define
+
+define comment_string
+	[repeat id] |
+	[repeat stringlit] |
+	', |
+	'. |
+	': |
+	'/
+end define
+
+
+

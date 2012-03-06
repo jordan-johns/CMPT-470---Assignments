@@ -1,0 +1,7 @@
+program Variables;
+ 
+var
+   i: Integer;
+ 
+begin
+end.

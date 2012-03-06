@@ -1,0 +1,239 @@
+% PRE-STUFF
+
+define progDef
+	'program [id]'; [NL] [NL] |
+	[repeat comment_pascal] [NL] [NL] 'program [id]'; [NL] [NL]
+end define
+
+define use_section
+	uses [NL] [IN] [repeat uses] [EX] [NL]
+end define
+
+define uses
+	crt'; [NL]
+end define
+
+%
+% CORE
+%
+
+define body
+	begin [NL] [opt LOC] 'end. |
+	begin [NL] [repeat LOC] 'end.
+end define
+
+% Used for large code blocks in conditionals
+define internal_body
+	begin [NL] [opt LOC] 'end; [NL] |
+	begin [NL] [repeat LOC] 'end; [NL]
+end define
+
+define LOC
+	[IN] [comment_pascal] [EX] [NL] |
+	[IN] [functionCall] [opt comment_pascal] [EX] [NL] |
+	[IN] [var_ass] [opt comment_pascal] [EX] [NL] |
+	[IN] [conditional] [opt comment_pascal] [EX] |
+	[IN] [loop] [opt comment_pascal] [EX] |
+	[IN] [internal_body] [opt comment_pascal] [EX]
+end define
+
+
+%
+% Comments
+%
+define comment_pascal
+	[SPOFF]'{[SPON] [repeat comment_string] '} [NL]
+end define
+
+define comment_string
+	[repeat id] |
+	[stringlit] |
+	[key] |
+	[number] |
+	', |
+	'. |
+	'!
+end define
+
+
+%
+% VARIABLES
+%
+
+define var_section
+	var [NL] [IN] [repeat var_decl] [EX] [NL]
+end define
+
+define var_decl
+	[id] [SPOFF] ': [SPON] [primitive]'; [NL] |
+	[list id] [SPOFF] ': [SPON] [primitive]'; [NL]
+end define
+
+define var_ass
+	[id] ':= [value]'; |
+	[id] ':= [expression]';
+end define
+
+define expression
+	[value] [ops] [value] |
+	[value] [cond_ops] [value]
+end define
+
+define const_section
+	const [NL] [IN] [repeat const_decl] [EX] [NL]
+end define
+
+define const_decl
+	[id] [SPOFF] ': [SPON] [primitive] '= [value]'; [NL]
+end define
+
+%
+% CONDITIONALS
+%
+
+define conditional
+	[if_then] |
+	[if_then_else] |
+	[case_structure]
+end define
+
+define if_then
+	if [cond_exp] then [NL] [LOC] |
+	if [complex_cond_exp] then [NL] [LOC]
+end define
+
+define if_then_else
+	[if_then] else [NL] [LOC]
+end define
+
+define cond_exp
+	[value] [cond_ops] [value]
+end define
+
+define complex_cond_exp
+	'([cond_exp]') and '([cond_exp]') |
+	'([cond_exp]') or '([cond_exp]')
+end define
+
+define case_structure
+	case [id] of [NL] [IN] [case_body] [EX] else [NL] [LOC] 'end; [NL]
+end define
+
+define case_body
+	[repeat case_check]
+end define
+
+define case_check
+	[value] [SPOFF] ': [SPON] [functionCall] [NL]
+end define
+
+
+%
+% LOOPS
+%
+define loop
+	[for_loop] |
+	[while_loop] |
+	[do_loop]
+end define
+
+define for_loop
+	for [for_exp] do [NL] [loop_body] 
+end define
+
+define for_exp
+	[id] := [value] to [value]
+end define
+
+define while_loop
+	while [cond_exp] [NL] [loop_body]
+end define
+
+define do_loop
+	'repeat [NL] [do_loop_exp] [NL]
+end define
+
+define do_loop_exp
+	[loop_body] until [complex_cond_exp]'; |
+	[loop_body] until [cond_exp]';
+end define
+
+define loop_body
+	[repeat LOC] |
+	[internal_body]
+end define
+
+
+
+
+%
+% PRIMITIVES
+%
+
+define primitive
+	Integer |
+	String |
+	Boolean |
+	Char |
+	Real
+end define
+
+define value
+	[number] |
+	[negative_number] |
+	[id] |
+	[charlit] |
+	[stringlit]
+end define
+
+define negative_number
+	'- [SPOFF] [number] [SPON]
+end define
+
+%
+% OPERATORS
+%
+
+define ops
+	'+ |
+	'- |
+	'* |
+	'/ |
+	'div |
+	'mod
+end define
+
+define cond_ops
+	'> |
+	'< |
+	'>= |
+	'<= |
+	'= |
+	'<>
+end define
+
+%
+% FUNCTIONS
+%
+
+define functionCall
+	Write [SPOFF] '([charlit]') [opt ';] [SPON] |
+	Writeln [SPOFF] '([charlit]') [opt ';] [SPON] |
+	Writeln [SPOFF] '([id]') [opt ';] [SPON] |
+	Writeln [SPOFF] '([id]',[charlit]') [opt ';] [SPON] |
+	Writeln [SPOFF] '([charlit]',[id]') [opt ';] [SPON] |
+	TextColor [SPOFF] '([id]') [opt ';] [SPON] |
+	TextBackground [SPOFF] '([id]') [opt ';] [SPON] |
+	GoToXY [SPOFF] '([number]',[number]') [opt ';] [SPON] |
+	Window [SPOFF] '([number]',[number]',[number]',[number]') [opt ';] [SPON] |
+	Sound [SPOFF] '([number]') [opt ';] [SPON] |
+	Delay [SPOFF] '([number]') [opt ';] [SPON] |
+	NoSound [opt ';] |
+	ClrScr [opt ';] |
+	Readln [opt ';] |
+	Readln [SPOFF] '([id]') [opt ';] [SPON] |
+	ReadKey [opt ';] |
+	Break'; |
+	Continue';
+end define
+

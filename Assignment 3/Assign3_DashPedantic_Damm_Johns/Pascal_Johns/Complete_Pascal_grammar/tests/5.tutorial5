@@ -1,0 +1,14 @@
+program Decisions;
+ 
+var
+   i: Integer;
+ 
+begin
+   Writeln('Enter a number');
+   Readln(i);
+   if i > 0 then
+      begin
+         Writeln('You entered ',i);
+         Writeln('It is a positive number');
+      end;
+end.

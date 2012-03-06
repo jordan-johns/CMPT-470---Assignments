@@ -1,0 +1,53 @@
+define progDef
+	'program [id]'; [NL] [NL] |
+	[comment_pascal] [NL] [NL] 'program [id]'; [NL] [NL]
+end define
+
+define use_section
+	uses [NL] [IN] [repeat uses] [EX] [NL]
+end define
+
+define uses
+	crt'; [NL]
+end define
+
+define body
+	begin [NL] [opt LOC] 'end. |
+	begin [NL] [repeat LOC] 'end.
+end define
+
+define LOC
+	[IN] [comment_pascal] [opt comment_pascal] [EX] [NL] |
+	[IN] [functionCall] [opt comment_pascal] [EX] [NL]
+end define
+
+
+%
+% Comments
+%
+define comment_pascal
+	[SPOFF]'{[SPON] [repeat comment_string] '} 
+end define
+
+define comment_string
+	[repeat id] |
+	[stringlit] |
+	[key] |
+	', |
+	'.
+end define
+
+define functionCall
+	Write [SPOFF] '([charlit])'; [SPON] |
+	Writeln [SPOFF] '([charlit])'; [SPON] |
+	TextColor [SPOFF] '([id]')'; [SPON] |
+	TextBackground [SPOFF] '([id]')'; [SPON] |
+	GoToXY [SPOFF] '([number]',[number]')'; [SPON] |
+	Window [SPOFF] '([number]',[number]',[number]',[number]')'; [SPON] |
+	Sound [SPOFF] '([number]')'; [SPON] |
+	Delay [SPOFF] '([number]')'; [SPON] |
+	NoSound'; |
+	ClrScr'; |
+	Readln';
+end define
+

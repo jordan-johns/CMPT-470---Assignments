@@ -1,0 +1,14 @@
+program Variables;
+ 
+var
+   i: Integer;
+   s: String;
+   b: Boolean;
+ 
+begin
+   i := -3;
+   s := 'Hello';
+   b := True;
+end.
+
+

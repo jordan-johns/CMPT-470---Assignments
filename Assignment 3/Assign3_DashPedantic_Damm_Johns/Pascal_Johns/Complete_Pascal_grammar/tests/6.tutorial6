@@ -1,0 +1,13 @@
+program Loops;
+ 
+var
+   i: Integer;
+ 
+begin
+   i := 0;
+   repeat
+      i := i + 1;
+      Break;
+      Writeln(i);
+   until i = 10;
+end.

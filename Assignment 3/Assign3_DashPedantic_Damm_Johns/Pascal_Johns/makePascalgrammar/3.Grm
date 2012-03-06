@@ -1,0 +1,137 @@
+% PRE-STUFF
+
+define progDef
+	'program [id]'; [NL] [NL] |
+	[comment_pascal] [NL] [NL] 'program [id]'; [NL] [NL]
+end define
+
+define use_section
+	uses [NL] [IN] [repeat uses] [EX] [NL]
+end define
+
+define uses
+	crt'; [NL]
+end define
+
+%
+% CORE
+%
+
+define body
+	begin [NL] [opt LOC] 'end. |
+	begin [NL] [repeat LOC] 'end.
+end define
+
+define LOC
+	[IN] [comment_pascal] [EX] [NL] |
+	[IN] [functionCall] [opt comment_pascal] [EX] [NL] |
+	[IN] [var_ass] [EX] [opt comment_pascal] [NL]
+end define
+
+
+%
+% Comments
+%
+define comment_pascal
+	[SPOFF]'{[SPON] [repeat comment_string] '} 
+end define
+
+define comment_string
+	[repeat id] |
+	[stringlit] |
+	[key] |
+	', |
+	'.
+end define
+
+
+%
+% VARIABLES
+%
+
+define var_section
+	var [NL] [IN] [repeat var_decl] [EX] [NL]
+end define
+
+define var_decl
+	[id] [SPOFF] ': [SPON] [primitive]'; [NL] |
+	[list id] [SPOFF] ': [SPON] [primitive]'; [NL]
+end define
+
+define var_ass
+	[id] ':= [value]'; |
+	[id] ':= [expression]';
+end define
+
+define expression
+	[value] [ops] [value]
+end define
+
+
+define const_section
+	const [NL] [IN] [repeat const_decl] [EX] [NL]
+end define
+
+define const_decl
+	[id] [SPOFF] ': [SPON] [primitive] '= [value]'; [NL]
+end define
+
+%
+% PRIMITIVES
+%
+
+define primitive
+	Integer |
+	String |
+	Boolean |
+	Char |
+	Real
+end define
+
+define value
+	[number] |
+	[negative_number] |
+	[id] |
+	[charlit] |
+	[stringlit]
+end define
+
+define negative_number
+	'- [SPOFF] [number] [SPON]
+end define
+
+%
+% OPERATORS
+%
+
+define ops
+	'+ |
+	'- |
+	'* |
+	'/ |
+	'div |
+	'mod
+end define
+
+%
+% FUNCTIONS
+%
+
+define functionCall
+	Write [SPOFF] '([charlit])'; [SPON] |
+	Writeln [SPOFF] '([charlit])'; [SPON] |
+	Writeln [SPOFF] '([id]')'; [SPON] |
+	Writeln [SPOFF] '([id]',[charlit]')'; [SPON] |
+	TextColor [SPOFF] '([id]')'; [SPON] |
+	TextBackground [SPOFF] '([id]')'; [SPON] |
+	GoToXY [SPOFF] '([number]',[number]')'; [SPON] |
+	Window [SPOFF] '([number]',[number]',[number]',[number]')'; [SPON] |
+	Sound [SPOFF] '([number]')'; [SPON] |
+	Delay [SPOFF] '([number]')'; [SPON] |
+	NoSound'; |
+	ClrScr'; |
+	Readln'; |
+	Readln [SPOFF] '([id]')'; [SPON] |
+	ReadKey';
+end define
+

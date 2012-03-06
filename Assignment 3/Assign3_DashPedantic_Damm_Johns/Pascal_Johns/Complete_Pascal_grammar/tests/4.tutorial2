@@ -1,0 +1,10 @@
+program Coordinates;
+ 
+uses
+   crt;
+ 
+begin
+   Window(1,1,10,5);
+   TextBackground(Blue);
+   ClrScr;
+end.

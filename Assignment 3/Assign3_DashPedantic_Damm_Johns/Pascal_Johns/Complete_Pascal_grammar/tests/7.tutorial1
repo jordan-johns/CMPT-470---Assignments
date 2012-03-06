@@ -1,0 +1,12 @@
+{This program will clear the screen, print "Hello world" and wait for the user to press enter.}
+ 
+program Hello;
+ 
+uses
+   crt;
+ 
+begin
+   ClrScr;{Clears the screen}
+   Write('Hello world');{Prints "Hello world"}
+   Readln;{Waits for the user to press enter}
+end.

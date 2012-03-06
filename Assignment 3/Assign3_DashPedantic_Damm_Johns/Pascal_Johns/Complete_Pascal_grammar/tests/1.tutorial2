@@ -1,0 +1,11 @@
+program Colors;
+ 
+uses
+   crt;
+ 
+begin
+   TextColor(Red);
+   Writeln('Hello');
+   TextColor(White);
+   Writeln('world');
+end.

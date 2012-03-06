@@ -1,0 +1,150 @@
+%
+% C Tutorials 2 grammar
+%
+include "C.keys"
+
+% Adds #include to [id] non terminal via regex expression
+tokens
+	id	|	"\#\i+"
+end tokens
+
+%
+% Process #include statements
+%
+define preprocessor
+	'#include<[stringlit]> [NL] |
+	'#include < [SPOFF] [filepath] > [SPON] [NL]
+end define
+
+define filepath
+	[fileID] [repeat slash_fileID]
+end define
+
+define fileID
+	[id] |
+	[key]
+end define
+
+define slash_fileID
+	[slash] [fileID]
+end define
+
+define slash
+	'/ | '\ | '. | ':
+end define
+
+
+%
+% Process functions
+%
+define functionHeader
+	[primitives] [id][SPOFF]'([list params]')[SPON] [NL] |
+	[primitives] [id]'(') [NL]
+end define
+
+define functionBody
+	'{ [NL] [repeat LOC] '}
+end define
+
+define LOC
+	[IN] [functionCalls] [NL] [EX] |
+	[IN] [variableDecl] [NL] [EX] |
+	[IN] [assignment] [NL] [EX] |
+	[IN] [return_statement] [EX]
+end define
+
+define return_statement
+	'return [id]'; [NL] |
+	'return [number]'; [NL] |
+	'return [stringlit]'; [NL]
+end define
+
+define functionFull
+	[functionHeader] [functionBody]
+end define
+
+define params
+	[primitives] [id]
+end define
+
+define functionCalls
+	printf[SPOFF]([stringlit],[SP][memops][value])[SPON]'; |
+	scanf[SPOFF]([stringlit],[SP][memops][value])[SPON]';
+end define
+
+
+%
+% Process core variables
+%
+define variableDecl
+	[varSignage] [primitives] [list id] '; |
+	[varSignage] [varMod] [primitives] [list id] '; |
+	[varSignage] [varMod] [primitives] [list id] = [value] ';
+end define
+
+define value
+	[id] |
+	[number] |
+	[number][SPOFF][id][SPON]
+end define
+
+define varMod
+	const
+end define
+
+define varSignage
+	signed |
+	unsigned |
+	[empty]
+end define
+
+
+%
+% ASSIGNMENT
+%
+define assignment
+	[id] [ops] [expression]
+end define
+
+define expression
+	[value] '; |
+	[id] [ops] [value]'; |
+	[value] [ops] [id]';
+end define
+
+%
+% EXTRAS
+%
+define primitives
+	int |
+	float |
+	char |
+	double |
+	short |
+	long |
+	void
+end define
+
+define ops
+	'+ |
+	'- |
+	'* |
+	'/ |
+	'\ |
+	'% |
+	'+= |
+	'*= |
+	'-= |
+	'/= |
+	'= 
+end define
+
+define memops
+	'& |
+	[empty]
+end define
+
+compounds
+	+= /= -= *=
+end compounds
+

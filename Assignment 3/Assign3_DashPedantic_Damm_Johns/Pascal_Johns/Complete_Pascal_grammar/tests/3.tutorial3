@@ -1,0 +1,8 @@
+program Variables;
+ 
+var
+   i, j: Integer;
+   s: String;
+ 
+begin
+end.

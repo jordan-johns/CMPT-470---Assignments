@@ -1,0 +1,9 @@
+program Coordinates;
+ 
+uses
+   crt;
+ 
+begin
+   GoToXY(10,5);
+   Writeln('Hello');
+end.
